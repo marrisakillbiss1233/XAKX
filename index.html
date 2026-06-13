@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Of summit - Online Banking Login</title>
+
+    <!-- =============================================
+         EDUCATIONAL NOTES:
+         - This is a FICTIONAL bank for learning purposes only
+         - The layout mimics typical banking login page patterns:
+           1. Top utility bar (contact, help, language)
+           2. Brand navigation with logo
+           3. Two-column layout: login card + promotional content
+           4. Footer with institutional links
+         - Color palette: Forest Green (#DC2626) + Gold (#DC2626)
+           conveys trust, stability, and prestige
+         - All form actions are simulated (no real backend)
+    ============================================= -->
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind Custom Theme Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Primary brand colors - deep forest green for trust & authority
+                        summitGreen: '#DC2626',
+                        summitDarkGreen: '#991B1B',
+                        summitLightGreen: '#EF4444',
+                        summitPaleGreen: '#FEE2E2',
+
+                        // Accent colors - gold for prestige & warmth
+                        summitGold: '#DC2626',
+                        summitDarkGold: '#991B1B',
+                        summitLightGold: '#F87171',
+
+                        // UI utility colors
+                        summitGray: '#F5F5F0',
+                        summitBorderGray: '#D1D1C7',
+                        summitTextGray: '#5C5C52',
+                        summitLinkGreen: '#EF4444',
+                        summitAlertRed: '#C0392B',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base typography */
+        * {
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+        }
+
+        /* Custom focus states for form inputs */
+        /* Banking sites use subtle, professional focus indicators */
+        input:focus, select:focus {
+            outline: none;
+            border-color: #f70101;
+            box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+        }
+
+        /* Sign-in button with hover transition */
+        .btn-signin {
+            background-color: #e80909;
+            transition: all 0.2s ease;
+        }
+        .btn-signin:hover {
+            background-color: #e33708;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(27, 67, 50, 0.3);
+        }
+        .btn-signin:active {
+            transform: translateY(0);
+        }
+
+        /* Card hover effect for promotional cards */
+        /* Subtle lift on hover signals interactivity */
+        .promo-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .promo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Secure badge gradient - reinforces trust visually */
+        .secure-badge {
+            background: linear-gradient(135deg, #f00303 0%, #e50a07 100%);
+        }
+
+        /* Subtle entrance animation */
+        /* Banking sites prefer conservative animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        .animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* Toast notifications */
+        @keyframes toastSlideIn {
+            from { transform: translateY(-16px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes toastFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .toast-anim {
+            animation: toastSlideIn 0.3s ease-out, toastFadeOut 0.3s ease-in 2.7s forwards;
+        }
+
+        /* Nav link underline animation */
+        .nav-link-anim {
+            position: relative;
+        }
+        .nav-link-anim::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #F87171;
+            transition: all 0.2s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link-anim:hover::after {
+            width: 80%;
+        }
+
+        /* Hero overlay gradient */
+        .hero-overlay {
+            background: linear-gradient(to right, rgba(27, 67, 50, 0.92) 0%, rgba(27, 67, 50, 0.65) 50%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+
+    <!-- ==========================================
+         TOP ACCENT STRIP
+         Many banking sites use a thin colored strip
+         at the very top as a brand signature
+    ========================================== -->
+    <div class="bg-summitGold h-1 w-full"></div>
+
+    <!-- ==========================================
+         UTILITY BAR
+         Contains secondary actions: contact, help,
+         language selector. Placed above main nav
+         to keep primary navigation uncluttered.
+    ========================================== -->
+    <div class="bg-summitGray border-b border-summitBorderGray">
+        <div class="max-w-7xl mx-auto px-4 py-1.5 flex justify-end items-center text-xs">
+            <a href="#" class="text-summitLinkGreen hover:underline mr-5 flex items-center">
+                <i data-lucide="phone" class="w-3 h-3 mr-1"></i>
+                Contact Us
+            </a>
+            <a href="#" class="text-summitLinkGreen hover:underline mr-5 flex items-center">
+                <i data-lucide="help-circle" class="w-3 h-3 mr-1"></i>
+                Help
+            </a>
+            <a href="#" class="text-summitLinkGreen hover:underline mr-5 flex items-center">
+                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i>
+                Locations
+            </a>
+            <!-- Language selector dropdown -->
+            <div class="relative" id="languageDropdown">
+                <button onclick="toggleDropdown()" class="flex items-center text-summitLinkGreen hover:underline font-medium">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 mr-1"></i>
+                    English
+                    <i data-lucide="chevron-down" class="w-3 h-3 ml-0.5"></i>
+                </button>
+                <div id="langMenu" class="hidden absolute right-0 top-7 bg-white border border-gray-200 shadow-lg rounded-md z-50 py-1 min-w-[130px]">
+                    <a href="#" class="block px-4 py-2 text-sm hover:bg-summitGray text-gray-700">English</a>
+                    <a href="#" class="block px-4 py-2 text-sm hover:bg-summitGray text-gray-700">Español</a>
+                    <a href="#" class="block px-4 py-2 text-sm hover:bg-summitGray text-gray-700">中文</a>
+                    <a href="#" class="block px-4 py-2 text-sm hover:bg-summitGray text-gray-700">Français</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MAIN NAVIGATION BAR
+         Features the bank logo and primary section
+         links. Banking sites typically organize by
+         customer segment (Personal, Business, etc.)
+    ========================================== -->
+    <nav class="bg-summitGreen">
+        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+            <a href="#" class="flex items-center flex-shrink-0">
+                <img src="am.svg" alt="Bank Of summit Logo" class="h-10 w-auto bg-transparent">
+            </a>
+
+            <!-- Mobile menu hamburger button -->
+            <button id="mobileMenuBtn" class="lg:hidden text-white p-2" onclick="toggleMobileMenu()">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <!-- Secondary Navigation: product-specific links -->
+        <!-- This two-tier nav pattern is common in banking sites -->
+        <div class="border-t border-white/15 hidden lg:block">
+            <div class="max-w-7xl mx-auto px-4 flex items-center space-x-1">
+                <a href="#" class="text-white/70 text-xs px-3 py-2.5 hover:text-white hover:underline">Personal</a>
+                <a href="#" class="text-white/70 text-xs px-3 py-2.5 hover:text-white hover:underline">Small Business</a>
+                <a href="#" class="text-white/70 text-xs px-3 py-2.5 hover:text-white hover:underline">Wealth Management</a>
+                <a href="#" class="text-white/70 text-xs px-3 py-2.5 hover:text-white hover:underline">Commercial</a>
+                <a href="#" class="text-white/70 text-xs px-3 py-2.5 hover:text-white hover:underline">About Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Slide-Down Menu -->
+    <div id="mobileMenu" class="hidden bg-summitGreen lg:hidden">
+        <div class="px-4 py-4 space-y-1">
+            <a href="#" class="block text-white text-sm py-2.5 px-3 rounded-md hover:bg-white/10 font-medium">Personal</a>
+            <a href="#" class="block text-white text-sm py-2.5 px-3 rounded-md hover:bg-white/10 font-medium">Small Business</a>
+            <a href="#" class="block text-white text-sm py-2.5 px-3 rounded-md hover:bg-white/10 font-medium">Wealth Management</a>
+            <a href="#" class="block text-white text-sm py-2.5 px-3 rounded-md hover:bg-white/10 font-medium">Commercial</a>
+            <a href="#" class="block text-white text-sm py-2.5 px-3 rounded-md hover:bg-white/10 font-medium">About Us</a>
+            <hr class="border-white/15 my-2">
+        </div>
+    </div>
+
+    <!-- ==========================================
+         MAIN CONTENT AREA
+         Two-column layout:
+         - Left: Login card (4 columns on large screens)
+         - Right: Promotional content (8 columns)
+         This layout is standard for banking login pages
+         - the login form is prominently placed but
+         doesn't dominate the entire viewport.
+    ========================================== -->
+    <main class="flex-1">
+        <div class="max-w-7xl mx-auto px-4 py-8 md:py-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+
+                <!-- ========================
+                     LOGIN CARD (Left Side)
+                     The card includes:
+                     1. Branded header with security badge
+                     2. Form fields with proper labels
+                     3. Remember me + info tooltip
+                     4. Sign-in button
+                     5. Recovery links
+                     6. Enrollment link
+                     7. Security notice
+                ======================== -->
+                <div class="lg:col-span-4 order-1">
+                    <div class="bg-white rounded-lg shadow-md animate-fadeInUp">
+
+                        <!-- Secure Sign-In Header -->
+                        <!-- Gradient + shield icon establishes trust immediately -->
+                        <div class="secure-badge rounded-t-lg px-5 py-4 flex items-center justify-between">
+                            <h2 class="text-white font-bold text-lg tracking-tight">Secure Sign-In</h2>
+                            <div class="flex items-center space-x-1.5">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-summitLightGold"></i>
+                                <span class="text-white/80 text-xs font-medium">Secured</span>
+                            </div>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form id="loginForm" onsubmit="handleLogin(event)" class="p-5 space-y-4" novalidate>
+
+                            <!-- Online ID / Username Field -->
+                            <!-- Banking sites typically label this "Online ID" or "User ID" -->
+                            <div>
+                                <label for="onlineId" class="block text-sm font-semibold text-gray-800 mb-1.5">
+                                    User ID
+                                </label>
+                                <input
+                                    type="text"
+                                    id="onlineId"
+                                    name="onlineId"
+                                    placeholder="Enter your Online ID"
+                                    class="w-full px-3.5 py-2.5 border border-gray-300 rounded-md text-sm placeholder-gray-400 transition-all duration-200 bg-transparent"
+                                    autocomplete="username"
+                                    required
+                                    aria-describedby="onlineIdError"
+                                >
+                                <p id="onlineIdError" class="hidden text-summitAlertRed text-xs mt-1 flex items-center">
+                                    <i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>
+                                    Please enter your Online ID
+                                </p>
+                            </div>
+
+                            <!-- Passcode / Password Field -->
+                            <!-- Most banking sites call this "Passcode" rather than "Password" -->
+                            <div>
+                                <label for="passcode" class="block text-sm font-semibold text-gray-800 mb-1.5">
+                                    Password
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="password"
+                                        id="passcode"
+                                        name="passcode"
+                                        placeholder="Enter your Passcode"
+                                        class="w-full px-3.5 py-2.5 border border-gray-300 rounded-md text-sm placeholder-gray-400 pr-10 transition-all duration-200 bg-transparent"
+                                        autocomplete="current-password"
+                                        required
+                                        aria-describedby="passcodeError"
+                                    >
+                                    <!-- Password visibility toggle -->
+                                    <!-- Standard UX pattern for authentication forms -->
+                                    <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-summitGreen transition-colors" aria-label="Toggle passcode visibility">
+                                        <i data-lucide="eye" class="w-4 h-4" id="eyeIcon"></i>
+                                    </button>
+                                </div>
+                                <p id="passcodeError" class="hidden text-summitAlertRed text-xs mt-1 flex items-center">
+                                    <i data-lucide="alert-circle" class="w-3 h-3 mr-1"></i>
+                                    Please enter your Passcode
+                                </p>
+                            </div>
+
+                            <!-- Remember Me / Save Online ID -->
+                            <!-- Banking sites warn users about saving IDs on shared devices -->
+                            <div class="flex items-start">
+                                <input type="checkbox" id="saveId" name="saveId" class="w-4 h-4 mt-0.5 rounded border-gray-300 text-summitGreen focus:ring-summitGreen focus:ring-offset-0">
+                                <label for="saveId" class="ml-2 text-xs text-summitTextGray leading-snug">Save this Online ID on this device</label>
+                                <button type="button" class="ml-1 mt-0.5 text-summitLinkGreen hover:text-summitGreen transition-colors" onclick="showInfo()" aria-label="Learn about saving your Online ID">
+                                    <i data-lucide="info" class="w-3.5 h-3.5"></i>
+                                </button>
+                            </div>
+
+                            <!-- Sign In Button -->
+                            <!-- Full-width primary action button -->
+                            <button
+                                type="submit"
+                                id="signInBtn"
+                                class="btn-signin w-full text-white font-bold text-sm py-3 rounded-md flex items-center justify-center space-x-2">
+                                <span>Sign In</span>
+                            </button>
+                        </form>
+
+                        <!-- Toast notification container -->
+                        <div id="toastContainer" class="px-5 pb-4"></div>
+                    </div>
+
+                    <!-- Quick Links Below Login Card -->
+                    <div class="mt-5 space-y-3">
+                        <a href="#" class="flex items-center text-summitLinkGreen text-xs hover:underline group font-medium">
+                            <i data-lucide="smartphone" class="w-4 h-4 mr-2.5 text-summitGold group-hover:text-summitLightGold transition-colors"></i>
+                            Download the Mobile App
+                        </a>
+                        <a href="#" class="flex items-center text-summitLinkGreen text-xs hover:underline group font-medium">
+                            <i data-lucide="calendar-clock" class="w-4 h-4 mr-2.5 text-summitGold group-hover:text-summitLightGold transition-colors"></i>
+                            Schedule an Appointment
+                        </a>
+                        <a href="#" class="flex items-center text-summitLinkGreen text-xs hover:underline group font-medium">
+                            <i data-lucide="shield" class="w-4 h-4 mr-2.5 text-summitGold group-hover:text-summitLightGold transition-colors"></i>
+                            Report Suspicious Activity
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ========================
+                     HERO / PROMO (Right Side)
+                     Banking sites use this space for:
+                     1. A hero banner promoting key services
+                     2. Product cards (checking, credit cards, loans)
+                     3. Security/fraud awareness section
+                ======================== -->
+                <div class="lg:col-span-8 order-2">
+
+                    <!-- Hero Banner -->
+                    <!-- Large image with gradient overlay + CTA -->
+                    <div class="relative rounded-lg overflow-hidden mb-7 animate-fadeInUp animate-delay-1">
+                        <img src="100.png" alt="Bank Of summit - Financial guidance" class="w-full h-64 md:h-80 lg:h-[500px] object-cover">
+                        <div class="absolute inset-0 flex items-center px-8 md:px-12">
+                            <div class="max-w-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="bg-summitGold/20 px-3 py-1 rounded-full">
+                                        <span class="text-summitLightGold text-xs font-semibold tracking-wide uppercase"></span>
+                                    </div>
+                                </div>
+                                <h1 class="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-3 leading-tight"></h1>
+                                <p class="text-white/85 text-sm md:text-base mb-6 leading-relaxed"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==========================================
+         FOOTER
+         Banking site footers typically include:
+         1. Product/service links organized by category
+         2. Legal links (Privacy, Terms, Accessibility)
+         3. Social media links
+         4. Regulatory disclosures (FDIC, Equal Housing)
+         5. Copyright notice
+    ========================================== -->
+    <footer class="bg-summitGreen mt-auto">
+        <!-- Top Footer: organized link columns -->
+        <div class="border-b border-white/15">
+            <div class="max-w-7xl mx-auto px-4 py-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                    <div>
+                        <h4 class="text-white font-bold text-xs mb-3 uppercase tracking-wider">Personal</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Checking</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Savings</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Credit Cards</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Home Loans</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Auto Loans</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-xs mb-3 uppercase tracking-wider">Small Business</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Business Checking</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Business Lending</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Merchant Services</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Payroll Solutions</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-xs mb-3 uppercase tracking-wider">Wealth Management</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Investment Advisory</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Private Banking</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Retirement Planning</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Trust & Estate</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-xs mb-3 uppercase tracking-wider">Commercial</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Treasury Management</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Commercial Lending</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Global Trade</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Institutional Investing</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <h4 class="text-white font-bold text-xs mb-3 uppercase tracking-wider">About Us</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Our Story</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Careers</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Community Impact</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Newsroom</a></li>
+                            <li><a href="#" class="text-white/60 text-[11px] hover:text-white hover:underline transition-colors">Investor Relations</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer: legal links, social, copyright -->
+        <div class="max-w-7xl mx-auto px-4 py-5">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <!-- Legal Links -->
+                <div class="flex items-center flex-wrap gap-x-1.5">
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Privacy Policy</a>
+                    <span class="text-white/30">|</span>
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Security</a>
+                    <span class="text-white/30">|</span>
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Terms of Service</a>
+                    <span class="text-white/30">|</span>
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Accessibility</a>
+                    <span class="text-white/30">|</span>
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Cookie Preferences</a>
+                    <span class="text-white/30">|</span>
+                    <a href="#" class="text-white/50 text-[10px] hover:text-white hover:underline transition-colors">Sitemap</a>
+                </div>
+
+                <!-- Social Media Icons -->
+                <div class="flex items-center space-x-5">
+                    <a href="#" class="text-white/50 hover:text-summitGold transition-colors" aria-label="Facebook">
+                        <i data-lucide="facebook" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-white/50 hover:text-summitGold transition-colors" aria-label="Twitter">
+                        <i data-lucide="twitter" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-white/50 hover:text-summitGold transition-colors" aria-label="LinkedIn">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-white/50 hover:text-summitGold transition-colors" aria-label="YouTube">
+                        <i data-lucide="youtube" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#" class="text-white/50 hover:text-summitGold transition-colors" aria-label="Instagram">
+                        <i data-lucide="instagram" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Regulatory Disclosures -->
+            <p class="text-white/40 text-[10px] mt-4 leading-relaxed">
+                Bank Of summit, Member FDIC. Equal Housing Lender. Deposits insured up to the maximum allowed by law.
+                <br>
+                Investment products are provided by summit Wealth Management, a separate registered broker-dealer. Not a deposit. Not FDIC insured. Not insured by any federal government agency. Not guaranteed by the bank. May lose value.
+                <br>
+                ©2024 Bank Of summit. All rights reserved. Bank Of summit is a wholly fictional entity created for educational purposes only.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         INFO MODAL
+         Explains the "Save Online ID" feature.
+         Banking sites use modals for security-related
+         information to ensure users read it carefully.
+    ========================================== -->
+    <div id="infoModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl max-w-md w-full p-6 relative animate-fadeInUp shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-300 hover:text-gray-500 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="bg-summitPaleGreen rounded-full p-2">
+                    <i data-lucide="info" class="w-5 h-5 text-summitGreen"></i>
+                </div>
+                <h3 class="font-bold text-summitGreen text-lg">Save Online ID</h3>
+            </div>
+            <p class="text-sm text-summitTextGray leading-relaxed mb-4">
+                If you choose to save your Online ID, it will be securely stored on the device you're using so you won't need to re-enter it each time you sign in.
+            </p>
+            <div class="bg-summitAlertRed/5 border border-summitAlertRed/20 rounded-lg p-3 mb-5">
+                <p class="text-xs text-summitAlertRed leading-relaxed font-medium">
+                    <i data-lucide="alert-triangle" class="w-3.5 h-3.5 inline mr-1"></i>
+                    <strong>Important:</strong> Do not save your Online ID on a shared or public device. Save it only on personal, secure devices.
+                </p>
+            </div>
+            <button onclick="closeModal()" class="btn-signin text-white text-sm font-bold px-8 py-2.5 rounded-md">
+                Got It
+            </button>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT
+         All interactive functionality:
+         1. Password visibility toggle
+         2. Form validation & simulated submission
+         3. Toast notifications
+         4. Language dropdown
+         5. Mobile menu toggle
+         6. Info modal
+         7. Escape key handling
+    ========================================== -->
+    <script>
+        // Initialize Lucide icon library
+        lucide.createIcons();
+
+        // ==================
+        // PASSWORD VISIBILITY TOGGLE
+        // Toggles between password and text input types
+        // Updates the eye icon accordingly
+        // ==================
+        function togglePassword() {
+            const passInput = document.getElementById('passcode');
+            const eyeIcon = document.getElementById('eyeIcon');
+
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+
+        // ==================
+        // FORM VALIDATION & LOGIN HANDLER
+        // Validates both fields are filled
+        // Shows inline errors for empty fields
+        // Simulates authentication flow with toast messages
+        // ==================
+        function handleLogin(e) {
+            e.preventDefault();
+            const onlineId = document.getElementById('onlineId').value.trim();
+            const passcode = document.getElementById('passcode').value.trim();
+
+            let hasError = false;
+
+            // Clear previous errors
+            document.getElementById('onlineIdError').classList.add('hidden');
+            document.getElementById('passcodeError').classList.add('hidden');
+
+            // Validate Online ID
+            if (!onlineId) {
+                document.getElementById('onlineIdError').classList.remove('hidden');
+                document.getElementById('onlineId').classList.add('border-summitAlertRed');
+                hasError = true;
+            } else {
+                document.getElementById('onlineId').classList.remove('border-summitAlertRed');
+            }
+
+            // Validate Passcode
+            if (!passcode) {
+                document.getElementById('passcodeError').classList.remove('hidden');
+                document.getElementById('passcode').classList.add('border-summitAlertRed');
+                hasError = true;
+            } else {
+                document.getElementById('passcode').classList.remove('border-summitAlertRed');
+            }
+
+            if (hasError) {
+                showToast('Please complete all required fields.', 'error');
+                return;
+            }
+
+            // Simulate login process
+            const btn = document.getElementById('signInBtn');
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Signing In...</span>';
+            btn.disabled = true;
+            lucide.createIcons();
+
+            showToast('Verifying your credentials...', 'info');
+
+            setTimeout(() => {
+                if (onlineId === 'AKAK11223' && passcode === '12345678') {
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '2.html';
+                    }, 1000);
+                } else {
+                    showToast('Invalid User ID or Passcode. Please try again.', 'error');
+                    btn.innerHTML = '<span>Sign In</span>';
+                    btn.disabled = false;
+                    lucide.createIcons();
+                }
+            }, 1500);
+        }
+
+        // ==================
+        // TOAST NOTIFICATION SYSTEM
+        // Replaces native alert() for better UX
+        // Supports: info, success, warning, error
+        // Auto-dismisses after 3 seconds
+        // ==================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            const bgColor = {
+                info: 'bg-summitGreen',
+                success: 'bg-emerald-600',
+                warning: 'bg-amber-600',
+                error: 'bg-summitAlertRed'
+            };
+
+            const iconName = {
+                info: 'info',
+                success: 'check-circle',
+                warning: 'alert-triangle',
+                error: 'x-circle'
+            };
+
+            toast.className = `toast-anim ${bgColor[type]} text-white text-xs px-4 py-3 rounded-md flex items-center space-x-2 shadow-lg`;
+            toast.innerHTML = `<i data-lucide="${iconName[type]}" class="w-4 h-4 flex-shrink-0"></i><span>${message}</span>`;
+
+            container.innerHTML = '';
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                if (container.contains(toast)) {
+                    container.removeChild(toast);
+                }
+            }, 3000);
+        }
+
+        // ==================
+        // LANGUAGE DROPDOWN
+        // Toggle visibility on click
+        // Close when clicking outside
+        // ==================
+        function toggleDropdown() {
+            document.getElementById('langMenu').classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('languageDropdown');
+            if (!dropdown.contains(e.target)) {
+                document.getElementById('langMenu').classList.add('hidden');
+            }
+        });
+
+        // ==================
+        // MOBILE MENU TOGGLE
+        // ==================
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // ==================
+        // INFO MODAL
+        // Shows "Save Online ID" explanation
+        // Closes on backdrop click, X button, or ESC key
+        // ==================
+        function showInfo() {
+            document.getElementById('infoModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+
+        document.getElementById('infoModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('infoModal')) {
+                closeModal();
+            }
+        });
+
+        // ==================
+        // KEYBOARD SHORTCUTS
+        // ESC key closes modal and dropdown
+        // ==================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.getElementById('langMenu').classList.add('hidden');
+            }
+        });
+
+        // ==================
+        // INPUT FOCUS CLEANUP
+        // Remove error styling when user starts typing
+        // ==================
+        document.getElementById('onlineId').addEventListener('input', function() {
+            this.classList.remove('border-summitAlertRed');
+            document.getElementById('onlineIdError').classList.add('hidden');
+        });
+
+        document.getElementById('passcode').addEventListener('input', function() {
+            this.classList.remove('border-summitAlertRed');
+            document.getElementById('passcodeError').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
+
